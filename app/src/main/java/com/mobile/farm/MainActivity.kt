@@ -50,6 +50,13 @@ object FruitsList
 @Serializable
 data class VisitDetails(val date: Int)
 
+val trees = listOf(
+    Tree(id = 1),
+    Tree(id = 2),
+    Tree(id = 3),
+    Tree(id = 4),
+    Tree(id = 5)
+)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +92,10 @@ fun FarmNavHost(modifier: Modifier) {
 
         composable<TreesList> {
             TreesScreen(
-                onNavigateBack = {navController.popBackStack()}
+                onNavigateBack = {navController.popBackStack()},
+                onTreeClick = { tree ->
+                    navController.navigate(TreeDetails(treeId = tree.id))
+                }
             )
         }
 
@@ -93,6 +103,11 @@ fun FarmNavHost(modifier: Modifier) {
             FruitsScreen(
                 onNavigateBack = {navController.popBackStack()}
             )
+        }
+
+        composable<TreeDetails> { backStackEntry ->
+            val details : TreeDetails = backStackEntry.toRoute()
+            Text("${details.treeId}")
         }
     }
 }
@@ -135,30 +150,30 @@ fun VisitsScreen(onNavigateBack: () -> Unit) {
 }
 
 @Composable
-fun TreesScreen(onNavigateBack: () -> Unit) {
+fun TreesScreen(
+    onNavigateBack: () -> Unit,
+    onTreeClick: (Tree) -> Unit
+) {
     Column() {
         Text("Trees will be shown here")
 
-//        LazyColumn(modifier = Modifier.fillMaxSize()) {
-//            items(items = trees, key = { tree -> tree.id }) { tree ->
-//                Text(
-//                    text = "ID: ${tree.id}",
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .clickable { onPersonClick(tree) }
-//                        .padding(16.dp)
-//                )
-//                HorizontalDivider()
-//            }
-//        }
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(items = trees, key = { tree -> tree.id }) { tree ->
+                Text(
+                    text = "ID: ${tree.id}",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable { onTreeClick(tree) }
+                        .padding(16.dp)
+                )
+                HorizontalDivider()
+            }
+        }
 
         Button(onClick = onNavigateBack) {
             Text("Back")
         }
     }
-
-
-
 }
 
 @Composable
