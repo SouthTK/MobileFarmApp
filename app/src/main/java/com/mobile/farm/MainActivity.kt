@@ -45,7 +45,10 @@ import com.mobile.farm.tree.TreesDatabase
 import com.mobile.farm.tree.TreeDao
 import com.mobile.farm.visit.VisitsList
 import com.mobile.farm.visit.VisitDetails
+import com.mobile.farm.visit.Visit
 import com.mobile.farm.visit.VisitsScreen
+import com.mobile.farm.visit.VisitsDatabase
+import com.mobile.farm.visit.VisitDao
 
 @Serializable
 object FarmHome
@@ -61,12 +64,20 @@ val seedTrees = listOf(
     Tree(id = 5)
 )
 
+val seedVisits = listOf(
+    Visit(date = 123),
+    Visit(date = 278),
+    Visit(date = 99)
+)
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val treeDb = TreesDatabase.getInstance(applicationContext)
         val treeDao = treeDb.treeDao()
+        val visitDb = VisitsDatabase.getInstance(applicationContext)
+        val visitDao = visitDb.visitDao()
 
         enableEdgeToEdge()
         setContent {
@@ -74,7 +85,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     FarmNavHost(
                         modifier = Modifier.padding(innerPadding),
-                        treeDao = treeDao
+                        treeDao = treeDao,
+                        visitDao = visitDao
                     )
                 }
             }
@@ -85,7 +97,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun FarmNavHost(
     modifier: Modifier,
-    treeDao: TreeDao
+    treeDao: TreeDao,
+    visitDao: VisitDao
 ) {
     //Remove later
     LaunchedEffect(Unit) {
@@ -94,7 +107,8 @@ fun FarmNavHost(
     //Remove later
 
     val navController: NavHostController = rememberNavController()
-    val allTree by treeDao.getAll().collectAsState(initial = emptyList())
+    val allTrees by treeDao.getAll().collectAsState(initial = emptyList())
+    val allVisits by visitDao.getAll().collectAsState(initial = emptyList())
 
     NavHost(navController = navController, startDestination = FarmHome) {
         composable<FarmHome> {
@@ -107,13 +121,15 @@ fun FarmNavHost(
 
         composable<VisitsList> {
             VisitsScreen(
-                onNavigateBack = {navController.popBackStack()}
+                visits = allVisits,
+                onNavigateBack = {navController.popBackStack()},
+
             )
         }
 
         composable<TreesList> {
             TreesScreen(
-                trees = allTree,
+                trees = allTrees,
                 onNavigateBack = {navController.popBackStack()},
                 onTreeClick = { tree ->
                     navController.navigate(TreeDetails(treeId = tree.id))

@@ -44,18 +44,18 @@ interface VisitDao{
 }
 
 @Database(entities = [Visit::class], version = 1, exportSchema = false)
-abstract class VisitDatabase : RoomDatabase() {
+abstract class VisitsDatabase : RoomDatabase() {
     abstract fun visitDao() : VisitDao
 
     companion object {
         @Volatile
-        private var instance: VisitDatabase? = null
+        private var instance: VisitsDatabase? = null
 
-        fun getInstance(context: Context): VisitDatabase {
+        fun getInstance(context: Context): VisitsDatabase {
             return instance ?: synchronized(this) {
                 instance ?: Room.databaseBuilder(
                     context.applicationContext,
-                    VisitDatabase::class.java,
+                    VisitsDatabase::class.java,
                     "visits.db"
                 ).build().also {instance = it}
             }
