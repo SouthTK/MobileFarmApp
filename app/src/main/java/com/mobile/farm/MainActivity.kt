@@ -19,6 +19,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,33 +40,42 @@ import com.mobile.farm.ui.theme.FarmTheme
 import com.mobile.farm.tree.TreesList
 import com.mobile.farm.tree.TreeDetails
 import com.mobile.farm.tree.Tree
+import com.mobile.farm.tree.TreesScreen
+import com.mobile.farm.tree.TreesDatabase
+import com.mobile.farm.tree.TreeDao
+import com.mobile.farm.visit.VisitsList
+import com.mobile.farm.visit.VisitDetails
+import com.mobile.farm.visit.VisitsScreen
 
 @Serializable
 object FarmHome
-@Serializable
-object VisitsList
 
 @Serializable
 object FruitsList
 
-@Serializable
-data class VisitDetails(val date: Int)
-
-val trees = listOf(
+val seedTrees = listOf(
     Tree(id = 1),
     Tree(id = 2),
     Tree(id = 3),
     Tree(id = 4),
     Tree(id = 5)
 )
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val treeDb = TreesDatabase.getInstance(applicationContext)
+        val treeDao = treeDb.treeDao()
+
         enableEdgeToEdge()
         setContent {
             FarmTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    FarmNavHost(modifier = Modifier.padding(innerPadding))
+                    FarmNavHost(
+                        modifier = Modifier.padding(innerPadding),
+                        treeDao = treeDao
+                    )
                 }
             }
         }
@@ -72,8 +83,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun FarmNavHost(modifier: Modifier) {
+fun FarmNavHost(
+    modifier: Modifier,
+    treeDao: TreeDao
+) {
+    //Remove later
+    LaunchedEffect(Unit) {
+        if (treeDao.count() == 0) { treeDao.insertAll(seedTrees) }
+    }
+    //Remove later
+
     val navController: NavHostController = rememberNavController()
+    val allTree by treeDao.getAll().collectAsState(initial = emptyList())
 
     NavHost(navController = navController, startDestination = FarmHome) {
         composable<FarmHome> {
@@ -92,6 +113,7 @@ fun FarmNavHost(modifier: Modifier) {
 
         composable<TreesList> {
             TreesScreen(
+                trees = allTree,
                 onNavigateBack = {navController.popBackStack()},
                 onTreeClick = { tree ->
                     navController.navigate(TreeDetails(treeId = tree.id))
@@ -112,7 +134,6 @@ fun FarmNavHost(modifier: Modifier) {
     }
 }
 
-// TO DO: move code below to another file
 @Composable
 fun FarmScreen(
     onVisitsClick: () -> Unit,
@@ -136,42 +157,6 @@ fun FarmScreen(
 
         Button(onClick = onFruitsClick) {
             Text("Fruits")
-        }
-    }
-}
-
-@Composable
-fun VisitsScreen(onNavigateBack: () -> Unit) {
-    Text("Visits will be shown here")
-
-    Button(onClick = onNavigateBack) {
-        Text("Back")
-    }
-}
-
-@Composable
-fun TreesScreen(
-    onNavigateBack: () -> Unit,
-    onTreeClick: (Tree) -> Unit
-) {
-    Column() {
-        Text("Trees will be shown here")
-
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(items = trees, key = { tree -> tree.id }) { tree ->
-                Text(
-                    text = "ID: ${tree.id}",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { onTreeClick(tree) }
-                        .padding(16.dp)
-                )
-                HorizontalDivider()
-            }
-        }
-
-        Button(onClick = onNavigateBack) {
-            Text("Back")
         }
     }
 }

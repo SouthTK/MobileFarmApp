@@ -29,9 +29,6 @@ interface TreeDao {
     @Query("SELECT * FROM tree ORDER BY id")
     fun getAll(): Flow<List<Tree>>
 
-//    @Query("SELECT * FROM tree WHERE age > :minAge")
-//    fun getAdults(minAge: Int): Flow<List<Tree>>
-
     @Query("SELECT * FROM tree WHERE id = :treeId")
     suspend fun getById(treeId: Int): Tree?
 
