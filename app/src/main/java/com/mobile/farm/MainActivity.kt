@@ -123,7 +123,9 @@ fun FarmNavHost(
             VisitsScreen(
                 visits = allVisits,
                 onNavigateBack = {navController.popBackStack()},
-
+                onVisitClick = { visit ->
+                    navController.navigate(VisitDetails(visitDate = visit.date))
+                }
             )
         }
 
@@ -147,6 +149,12 @@ fun FarmNavHost(
             val details : TreeDetails = backStackEntry.toRoute()
             Text("${details.treeId}")
         }
+
+        composable<VisitDetails> { backStackEntry ->
+            val details : VisitDetails = backStackEntry.toRoute()
+            Text("${details.visitDate}")
+        }
+
     }
 }
 

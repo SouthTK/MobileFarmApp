@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 object VisitsList
 
 @Serializable
-data class VisitDetails(val date : Int)
+data class VisitDetails(val visitDate : Int)
 
 @Entity(tableName = "visit")
 data class Visit(

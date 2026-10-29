@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun VisitsScreen(
     visits: List<Visit>,
-    onNavigateBack: () -> Unit
-
+    onNavigateBack: () -> Unit,
+    onVisitClick: (Visit) -> Unit
 ) {
     Column() {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -26,7 +26,7 @@ fun VisitsScreen(
                     text = "ID: ${visit.date}",
                     modifier = Modifier
                         .fillMaxSize()
-                        .clickable {  }
+                        .clickable { onVisitClick(visit) }
                         .padding(16.dp)
                 )
                 HorizontalDivider()
