@@ -39,6 +39,9 @@ interface VisitDao{
     @Query("SELECT COUNT(*) FROM visit")
     suspend fun count() : Int
 
+    @Query("DELETE FROM visit")
+    suspend fun deleteAll()
+
     @Insert
     suspend fun insertAll(visits: List<Visit>)
 }

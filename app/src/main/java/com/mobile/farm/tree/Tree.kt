@@ -35,6 +35,9 @@ interface TreeDao {
     @Query("SELECT COUNT(*) FROM tree")
     suspend fun count(): Int
 
+    @Query("DELETE FROM tree")
+    suspend fun deleteAll()
+
     @Insert
     suspend fun insertAll(trees: List<Tree>)
 }

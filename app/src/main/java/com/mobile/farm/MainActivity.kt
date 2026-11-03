@@ -103,6 +103,7 @@ fun FarmNavHost(
     //Remove later
     LaunchedEffect(Unit) {
         if (treeDao.count() == 0) { treeDao.insertAll(seedTrees) }
+        if (visitDao.count() == 0) { visitDao.insertAll(seedVisits) }
     }
     //Remove later
 
