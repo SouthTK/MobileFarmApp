@@ -166,6 +166,7 @@ fun FarmScreen(
     onFruitsClick: () -> Unit
 ) {
     Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
