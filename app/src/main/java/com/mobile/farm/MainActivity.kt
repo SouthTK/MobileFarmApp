@@ -188,9 +188,15 @@ fun FarmScreen(
 
 @Composable
 fun FruitsScreen(onNavigateBack: () -> Unit) {
-    Text("Fruits will be shown here")
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Fruits will be shown here")
 
-    Button(onClick = onNavigateBack) {
-        Text("Back")
+        Button(onClick = onNavigateBack) {
+            Text("Back")
+        }
     }
 }
