@@ -48,3 +48,26 @@ fun TreesScreen(
         }
     }
 }
+
+@Composable
+fun TreeDetailsScreen(
+    tree : Tree,
+    onNavigateBack: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("ID: ${tree.id}")
+
+        Text("Type: ${tree.type}")
+
+        Button(
+            onClick = onNavigateBack,
+            modifier = Modifier.fillMaxWidth().padding(40.dp)
+        ) {
+            Text("Back")
+        }
+    }
+}

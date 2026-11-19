@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Database
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +22,8 @@ data class TreeDetails(val treeId: Int)
 @Entity(tableName = "tree")
 data class Tree(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    val id: Int = 0,
+    val type: String
 )
 
 @Dao
@@ -40,6 +42,9 @@ interface TreeDao {
 
     @Insert
     suspend fun insertAll(trees: List<Tree>)
+
+    @Update
+    suspend fun update(tree: Tree)
 }
 
 @Database(entities = [Tree::class], version = 1, exportSchema = false)

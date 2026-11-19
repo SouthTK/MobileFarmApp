@@ -43,6 +43,7 @@ import com.mobile.farm.tree.Tree
 import com.mobile.farm.tree.TreesScreen
 import com.mobile.farm.tree.TreesDatabase
 import com.mobile.farm.tree.TreeDao
+import com.mobile.farm.tree.TreeDetailsScreen
 import com.mobile.farm.visit.VisitsList
 import com.mobile.farm.visit.VisitDetails
 import com.mobile.farm.visit.Visit
@@ -57,11 +58,11 @@ object FarmHome
 object FruitsList
 
 val seedTrees = listOf(
-    Tree(id = 1),
-    Tree(id = 2),
-    Tree(id = 3),
-    Tree(id = 4),
-    Tree(id = 5)
+    Tree(id = 1, type = "Apple"),
+    Tree(id = 2, type = "Banana"),
+    Tree(id = 3, type = "Cherry"),
+    Tree(id = 4, type = "Durian"),
+    Tree(id = 5, type = "Elm")
 )
 
 val seedVisits = listOf(
@@ -148,7 +149,11 @@ fun FarmNavHost(
 
         composable<TreeDetails> { backStackEntry ->
             val details : TreeDetails = backStackEntry.toRoute()
-            Text("${details.treeId}")
+            val tree = allTrees.first { it.id == details.treeId }
+            TreeDetailsScreen(
+                tree = tree,
+                onNavigateBack = {navController.popBackStack()}
+            )
         }
 
         composable<VisitDetails> { backStackEntry ->
