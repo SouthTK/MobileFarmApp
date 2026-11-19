@@ -4,20 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,6 +44,11 @@ import com.mobile.farm.visit.Visit
 import com.mobile.farm.visit.VisitsScreen
 import com.mobile.farm.visit.VisitsDatabase
 import com.mobile.farm.visit.VisitDao
+import com.mobile.farm.fruit.FruitsScreen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.URL
 
 @Serializable
 object FarmHome
@@ -84,9 +82,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FarmTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold { innerPadding ->
                     FarmNavHost(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.fillMaxSize().padding(innerPadding),
                         treeDao = treeDao,
                         visitDao = visitDao
                     )
@@ -118,7 +116,8 @@ fun FarmNavHost(
             FarmScreen(
                 onVisitsClick = {navController.navigate(VisitsList)},
                 onTreesClick = {navController.navigate(TreesList)},
-                onFruitsClick = {navController.navigate((FruitsList))}
+                onFruitsClick = {navController.navigate((FruitsList))},
+                modifier = modifier
             )
         }
 
@@ -169,10 +168,14 @@ fun FarmNavHost(
 fun FarmScreen(
     onVisitsClick: () -> Unit,
     onTreesClick: () -> Unit,
-    onFruitsClick: () -> Unit
+    onFruitsClick: () -> Unit,
+    modifier: Modifier
 ) {
+    var temperature by remember { mutableStateOf("Loading ... ") }
+    LaunchedEffect(Unit) { temperature = fetchTemperature() }
+
     Column(
-        modifier = Modifier.fillMaxSize().padding(top = 50.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -183,13 +186,13 @@ fun FarmScreen(
             )
 
         Text(
-            text = "Current Location: PLACEHOLDER",
+            text = "Location:  ",
             modifier = Modifier.align(Alignment.Start)
                 .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
         )
 
         Text(
-            text = "Current Temperature: PLACEHOLDER",
+            text = "Temperature: $temperature",
             modifier = Modifier.align(Alignment.Start)
                 .padding(start = 30.dp, end = 30.dp, bottom = 15.dp)
             )
@@ -217,17 +220,22 @@ fun FarmScreen(
     }
 }
 
-@Composable
-fun FruitsScreen(onNavigateBack: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Fruits will be shown here")
+suspend fun fetchTemperature(): String {
+    return withContext(Dispatchers.IO) {
+        try {
+            val url = "https://api.open-meteo.com/v1/forecast?latitude=11.13278&longitude=106.60833&current=temperature_2m"
 
-        Button(onClick = onNavigateBack) {
-            Text("Back")
+            // Read the JSON response from the URL
+            val response = URL(url).readText()
+
+            // Parse the JSON string
+            val jsonObject = JSONObject(response)
+            val currentObj = jsonObject.getJSONObject("current")
+            val temp = currentObj.getDouble("temperature_2m")
+
+            "$temp °C"
+        } catch (e: Exception) {
+            "Error fetching data: ${e.localizedMessage}"
         }
     }
 }
