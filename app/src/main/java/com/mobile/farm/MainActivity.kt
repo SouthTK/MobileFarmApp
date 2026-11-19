@@ -6,8 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -199,23 +202,34 @@ fun FarmScreen(
 
         Button(
             onClick = onVisitsClick,
-            shape = RoundedCornerShape(4.dp)
+            shape = RoundedCornerShape(4.dp),
+            modifier = Modifier.padding(10.dp).width(160.dp)
         ) {
             Text("Visits")
         }
 
         Button(
             onClick = onTreesClick,
-            shape = RoundedCornerShape(4.dp)
+            shape = RoundedCornerShape(4.dp),
+            modifier = Modifier.padding(10.dp).width(160.dp)
         ) {
             Text("Trees")
         }
 
         Button(
             onClick = onFruitsClick,
-            shape = RoundedCornerShape(4.dp)
+            shape = RoundedCornerShape(4.dp),
+            modifier = Modifier.padding(10.dp).width(160.dp)
             ) {
             Text("Fruits")
+        }
+
+        Button(
+            onClick = {},
+            shape = RoundedCornerShape(4.dp),
+            modifier = Modifier.padding(10.dp).width(160.dp)
+        ) {
+            Text("Settings")
         }
     }
 }
