@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
@@ -178,15 +179,24 @@ fun FarmScreen(
 
         Text(text = "Farm")
 
-        Button(onClick = onVisitsClick) {
+        Button(
+            onClick = onVisitsClick,
+            shape = RoundedCornerShape(4.dp)
+        ) {
             Text("Visits")
         }
 
-        Button(onClick = onTreesClick) {
+        Button(
+            onClick = onTreesClick,
+            shape = RoundedCornerShape(4.dp)
+        ) {
             Text("Trees")
         }
 
-        Button(onClick = onFruitsClick) {
+        Button(
+            onClick = onFruitsClick,
+            shape = RoundedCornerShape(4.dp)
+            ) {
             Text("Fruits")
         }
     }
