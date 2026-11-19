@@ -172,12 +172,27 @@ fun FarmScreen(
     onFruitsClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize().padding(top = 50.dp),
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(text = "Farm")
+        Text(
+            text = "Farm Main Menu",
+            modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
+            )
+
+        Text(
+            text = "Current Location: PLACEHOLDER",
+            modifier = Modifier.align(Alignment.Start)
+                .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+        )
+
+        Text(
+            text = "Current Temperature: PLACEHOLDER",
+            modifier = Modifier.align(Alignment.Start)
+                .padding(start = 30.dp, end = 30.dp, bottom = 15.dp)
+            )
 
         Button(
             onClick = onVisitsClick,
