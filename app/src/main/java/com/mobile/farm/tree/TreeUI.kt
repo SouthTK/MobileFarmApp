@@ -30,7 +30,7 @@ fun TreesScreen(
         LazyColumn(modifier = Modifier.weight(1f).padding(top = 20.dp)) {
             items(items = trees, key = { tree -> tree.id }) { tree ->
                 Text(
-                    text = "ID: ${tree.id}",
+                    text = "Tree  #${tree.id}",
                     modifier = Modifier
                         .fillMaxSize()
                         .clickable { onTreeClick(tree) }
@@ -59,9 +59,15 @@ fun TreeDetailsScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("ID: ${tree.id}")
+        Text(
+            text = "ID: ${tree.id}",
+            modifier = Modifier.align(Alignment.Start).padding(horizontal = 16.dp)
+        )
 
-        Text("Type: ${tree.type}")
+        Text(
+            text = "Type: ${tree.type}",
+            modifier = Modifier.align(Alignment.Start).padding(horizontal = 16.dp)
+            )
 
         Button(
             onClick = onNavigateBack,

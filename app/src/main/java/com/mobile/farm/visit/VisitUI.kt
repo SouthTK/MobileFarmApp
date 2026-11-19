@@ -30,7 +30,7 @@ fun VisitsScreen(
         LazyColumn(modifier = Modifier.weight(1f).padding(top = 20.dp)) {
             items(items = visits, key = {visit -> visit.date}) { visit ->
                 Text(
-                    text = "ID: ${visit.date}",
+                    text = "Date: ${visit.date}",
                     modifier = Modifier
                         .fillMaxSize()
                         .clickable { onVisitClick(visit) }
@@ -39,6 +39,30 @@ fun VisitsScreen(
                 HorizontalDivider()
             }
         }
+
+        Button(
+            onClick = onNavigateBack,
+            modifier = Modifier.fillMaxWidth().padding(40.dp)
+        ) {
+            Text("Back")
+        }
+    }
+}
+
+@Composable
+fun VisitDetailsScreen(
+    visit: Visit,
+    onNavigateBack: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "ID: ${visit.date}",
+            modifier = Modifier.align(Alignment.Start).padding(horizontal = 16.dp)
+        )
 
         Button(
             onClick = onNavigateBack,
